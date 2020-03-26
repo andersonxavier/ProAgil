@@ -1,0 +1,11 @@
+/* You can add global styles to this file, and also import other style files */
+
+/*Para instalar usei 
+npm install --save bootstrap @fortawesome/fontawesome-free
+
+Colocado aqui para que o bootstrap e Fontawesome funcionem
+Este arquivo ficar refenciado no arquivo "angular.json"
+
+*/
+@import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+@import '../node_modules/@fortawesome/fontawesome-free/css/all.min.css';

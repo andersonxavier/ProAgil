@@ -1,0 +1,14 @@
+========
+APP
+========
+Para rodar -->  ng serve  
+Para rodar e executar -->  ng serve -o 
+http://localhost:4200/
+
+
+========
+WebAPI
+========
+Para rodar --> dotnet run
+http://localhost:5000/api/values
+http://localhost:5000/api/values{id}
