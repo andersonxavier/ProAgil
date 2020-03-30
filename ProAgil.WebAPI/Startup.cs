@@ -59,6 +59,10 @@ namespace ProAgil.WebAPI
             uma especificação de uma tecnologia de navegadores que define meios para um servidor permitir que seus recursos sejam acessados por 
             uma página web de um domínio diferente*/
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            
+            //Permite acessar imagens dentro da pasta "wwwroot" na pasta raiz do seu projeto
+            app.UseStaticFiles();
+            
             //Comentado para nao dar erro de HTTPS
             //app.UseHttpsRedirection();
             app.UseMvc();

@@ -29,6 +29,8 @@ namespace ProAgil.WebAPI.Migrations
                     b.Property<int>("QtdPessoas");
 
                     b.Property<string>("Tema");
+                    
+                    b.Property<string>("ImageUrl");
 
                     b.HasKey("EventoId");
 
