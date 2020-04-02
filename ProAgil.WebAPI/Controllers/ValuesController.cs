@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore; // Para metodos Assincronos
-using ProAgil.WebAPI.Data;
-using ProAgil.WebAPI.Model;
+using ProAgil.Repository;
 
 namespace ProAgil.WebAPI.Controllers
 {
@@ -15,8 +14,8 @@ namespace ProAgil.WebAPI.Controllers
     public class ValuesController : ControllerBase
     {
         //Criado para pegar retorno do contexto
-        public readonly DataContext _context;
-        public ValuesController(DataContext context) {
+        public readonly ProAgilContext _context;
+        public ValuesController(ProAgilContext context) {
 
             _context = context;
         }
@@ -53,7 +52,7 @@ namespace ProAgil.WebAPI.Controllers
         {
             try
             {
-                var Results = await _context.Eventos.FirstOrDefaultAsync(x => x.EventoId == id);
+                var Results = await _context.Eventos.FirstOrDefaultAsync(x => x.Id == id);
 
                 return Ok(Results);
             }
@@ -63,121 +62,7 @@ namespace ProAgil.WebAPI.Controllers
             }
         
         }
-        
-
-        //=================================================================================
-        //Usando Action Result Consumindo do banco de dados de forma sincrona
-        //=================================================================================
-        // [HttpGet]
-        // public ActionResult Get()
-        //// public ActionResult<IEnumerable<Evento>> Get()
-        // {
-        //     try
-        //     {
-        //         var Result = _context.Eventos.ToList();
-
-        //         return Ok(Result);
-        //     }
-        //     catch (System.Exception)
-        //     {
-        //         //Ele retorna um status 500 para uma msg customizada
-        //         //Se esse Catch for comentado, uma msg de erro amigavel sera exibida  
-        //         //No arquitvo "StartUp.cs" é possivel tirar a msg de erro amigavel no techo:
-        //         //app.UseDeveloperExceptionPage();  //Basta comenta-lo
-                
-        //         return this.StatusCode(StatusCodes.Status500InternalServerError, "Banco Dados Falhou");
-        //     }
-        // }
-
-
-        //===========================
-        //Usando Action Result Basico
-        //===========================
-        // [HttpGet]
-        // public ActionResult<IEnumerable<Evento>> Get()
-        // {
-        //     return _context.Eventos.ToList();
-        // }
-
-        // [HttpGet("{id}")]
-        // public ActionResult<Evento> Get(int id)
-        // {
-        //     return _context.Eventos.FirstOrDefault(x => x.EventoId == id);
-        // }
-
-        //===========================
-        //Codigo Mocado
-        //===========================
-        //Tesntando metodo!!
-        // [HttpGet]
-        // public ActionResult<IEnumerable<Evento>> Get()
-        // {
-        //     return new Evento[] {
-        //         new Evento() {
-        //             EventoId = 1,
-        //             Tema = "Angular e .NET Core",
-        //             Local = "Belo Horizonte",
-        //             Lote = "1º Lote",
-        //             QtdPessoas = 250,
-        //             DataEvento = DateTime.Now.AddDays(2).ToString("dd/MM/yyyy")
-        //         },
-        //         new Evento() {
-        //             EventoId = 2,
-        //             Tema = "Angular e Suas Novidades",
-        //             Local = "São Paulo",
-        //             Lote = "2º Lote",
-        //             QtdPessoas = 350,
-        //             DataEvento = DateTime.Now.AddDays(3).ToString("dd/MM/yyyy")
-        //         }
-
-        //      };
-        // }
-
-          //Tesntando metodo!!
-        // [HttpGet("{id}")]
-        // public ActionResult<Evento> Get(int id)
-        // {
-        //     return new Evento[] {
-        //         new Evento() {
-        //             EventoId = 1,
-        //             Tema = "Angular e .NET Core",
-        //             Local = "Belo Horizonte",
-        //             Lote = "1º Lote",
-        //             QtdPessoas = 250,
-        //             DataEvento = DateTime.Now.AddDays(2).ToString("dd/MM/yyyy")
-        //         },
-        //         new Evento() {
-        //             EventoId = 2,
-        //             Tema = "Angular e Suas Novidades",
-        //             Local = "São Paulo",
-        //             Lote = "2º Lote",
-        //             QtdPessoas = 350,
-        //             DataEvento = DateTime.Now.AddDays(3).ToString("dd/MM/yyyy")
-        //         }
-
-        //      }.FirstOrDefault(x => x.EventoId == id);
-        // }
-
-
-        //===========================
-        //Codigo Nativo
-        //===========================
-        // GET api/values
-        //[HttpGet]
-        //public ActionResult<IEnumerable<string>> Get()
-        //{
-        //    return new string[] { "value1", "value2","value3" };
-        //}
-
-        // GET api/values/5
-        // [HttpGet("{id}")]
-        // public ActionResult<string> Get(int id)
-        // {
-        //     return "value";
-        // }
-
-
-      
+          
 
         // POST api/values
         [HttpPost]

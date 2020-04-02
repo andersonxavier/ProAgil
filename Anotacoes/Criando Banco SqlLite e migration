@@ -1,0 +1,17 @@
+23:31 30/03/2020
+
+//Pode dar o erro:
+//..targets framework '.NETStandard'
+dotnet ef migration add init            (Na mesma pasta do .csproj onde fica o Contexto!)
+//Caso aconteça usar o seguinte comando
+dotnet ef --startup-project ../ProAgil.WebAPI migrations add init
+
+//Ou seja ele le os arquivos de Contexto ef em um projeto espescifico (neste caso o Repository)
+//E joga o arquivo .db em outra pasta (neste caso o projeto WebAPI)
+
+//Obs: Ambos criarao a pasta Micrations
+
+
+//Cria o Banco de dados no path indicado 
+//(neste caso volta um diretorio e entra no "ProAgil.WebAPI")
+dotnet ef --startup-project ../ProAgil.WebAPI database update
