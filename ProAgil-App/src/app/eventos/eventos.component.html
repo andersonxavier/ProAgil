@@ -27,7 +27,10 @@ como no caso a baixo, é possivel usar no [(ngModel)]
       <th>
         <button class="btn btn-outline-primary" 
         (click)="alternarImagem()">
-          Mostrar Imagem
+        <i class="{{mostrarImagem ? 'fa fa-eye-slash' : 'fa fa-eye'}}"></i>
+        <!-- Para padronizar msg do botao -->
+        <!-- {{mostrarImagem ? 'ocultar' : 'Mostrar'}}
+          Imagem -->
         </button>
       </th>
       <th>#</th>
@@ -44,20 +47,42 @@ como no caso a baixo, é possivel usar no [(ngModel)]
     <tr *ngFor="let evento of eventosFiltrados">
       <td>
         <img *ngIf="mostrarImagem"
-        src="http://localhost:5000/img/{{evento.imagemUrl}}"
+        src="http://localhost:5000/img/{{evento.imagemURL}}"
         [style.width.px]="imagemLargura"
         [style.margin.px]="imagemMargem">
       </td>
-      <td>{{evento.eventoId}}</td>
+      <!-- <td>{{evento.eventoId}}</td> -->
+      <td>{{evento.id}}</td>
       <td>{{evento.tema}}</td>
       <td>{{evento.local}}</td>
-      <td>{{evento.dataEvento}}</td> 
+      <!-- Criado pipe em "src\app\_helps\DateTimeFormatPipe.pipe.ts"  para formatar datas-->
+      <td>{{evento.dataEvento | DateTimeFormatPipe}}</td> 
       <td>{{evento.qtdPessoas}}</td>
       <!-- filtro com pipeline neste caso "uppercase" -->
-      <td>{{evento.lote | uppercase}}</td>
+      <!-- <td>{{evento.lote | uppercase}}</td> -->
+      
+      <!-- Feito depois do Observable -->
+      <!-- <td>{{evento.lotes | json}}</td>  --> <!-- para ver o json!-->
       <td>
-        <button class="btn btn-success"></button>
-        <button class="btn btn-danger"></button>
+        <div *ngIf="!evento.lotes.length">
+          Não Informado
+        </div>
+        <div *ngIf="evento.lotes.length">
+          {{evento.lotes[0].nome | uppercase}}>
+        </div>
+      </td>
+      <!-- --- -->
+      <td>
+        <div class="btn-group">
+          <!--<button class="btn btn-sm btn-primary">-->
+          <button class="btn btn-sm btn-success" 
+          tooltip="Editar" (click)="openModal(template)"> 
+              <i class="fa fa-edit"></i>
+          </button> 
+          <button class="btn btn-sm btn-danger" tooltip="Excluir">
+              <i class="fa fa-eraser"></i>
+          </button>
+        </div>
       </td>
     </tr>
   </tbody>
@@ -74,6 +99,21 @@ como no caso a baixo, é possivel usar no [(ngModel)]
   </tfoot>
   
 </table>
+
+
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Modal</h4>
+    <!-- OLHAR ESSE ITEM! O Simbulo do botao fechar nao aparece! -->
+    <button type="button"	class="close pull-right"
+      aria-label="Close" (click)="modalRef.hide()"> <!--modaralRef criado em eventos.component.ts-->
+      <span aria-hidden="true">6times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    this is a modal.
+  </div>
+</ng-template>
 
 
 
