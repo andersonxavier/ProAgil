@@ -104,16 +104,16 @@ como no caso a baixo, é possivel usar no [(ngModel)]
 <ng-template #template>
   <div class="modal-header">
     <h4 class="modal-title pull-left">Modal</h4>
-    <!-- OLHAR ESSE ITEM! O Simbulo do botao fechar nao aparece! -->
-    <button type="button"	class="close pull-right"
+     <button type="button"	class="close pull-right"
       aria-label="Close" (click)="modalRef.hide()"> <!--modaralRef criado em eventos.component.ts-->
-      <span aria-hidden="true">6times;</span>
+      <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
     this is a modal.
   </div>
 </ng-template>
+
 
 
 
