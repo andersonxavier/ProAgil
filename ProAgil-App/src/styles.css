@@ -9,3 +9,6 @@ Este arquivo ficar refenciado no arquivo "angular.json"
 */
 @import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 @import '../node_modules/@fortawesome/fontawesome-free/css/all.min.css';
+
+/* Usado para o Calendario em "Evneots.component.html" */
+@import '../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css';

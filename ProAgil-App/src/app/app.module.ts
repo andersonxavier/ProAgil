@@ -10,7 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 // foi necessario incluir para que funcione a
 // interpolacao [(ngModel)] no arquivo
 // eventos.component.html
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 //  Demonstrado no curso entretanto o caminha para o angular 9 nao funciona!
 //  import { BsDropdownModule, TooltipModule, ModalModule } from 'ngx/bootstrap';
@@ -20,7 +20,9 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { AppRoutingModule } from './app-routing.module';
 
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
+// Usado para o Recurso de Modal e Datepicker em "eventos.comeponent.html"
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 /* ======== */
@@ -60,6 +62,8 @@ import { DateTimeFormatPipePipe } from './_helps/DateTimeFormatPipe.pipe';
       TooltipModule.forRoot(),
       ModalModule.forRoot(),
 
+      BsDatepickerModule.forRoot(),
+
       AppRoutingModule,
       // Responsavel por permitir a comunicacao HTTP para WebApi
       // É um modulo nativo.
@@ -71,6 +75,9 @@ import { DateTimeFormatPipePipe } from './_helps/DateTimeFormatPipe.pipe';
       // interpolacao [(ngModel)] no arquivo
       // eventos.component.html
       FormsModule,
+
+      // Nesssario para uso do Forms em "eventos.component.html"
+      ReactiveFormsModule,
 
       // Necessario para que funcione o "dropdown" e o "dropdownToggle"
       // no arquivo "nav.component.html"
