@@ -17,6 +17,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { defineLocale } from 'ngx-bootstrap/chronos';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
 import { BsLocaleService } from 'ngx-bootstrap/datepicker';
+import { templateJitUrl } from '@angular/compiler';
 defineLocale('pt-br', ptBrLocale);
 
 @Component({
@@ -29,10 +30,13 @@ defineLocale('pt-br', ptBrLocale);
 export class EventosComponent implements OnInit {
   eventosFiltrados: Evento[]; // eventosFiltrados: any = [];
   eventos: Evento[]; // eventos: any;
+
+  evento: Evento;
+
   imagemLargura = 50;
   imagemMargem = 2;
   mostrarImagem = false;
-  modalRef: BsModalRef;
+  // modalRef: BsModalRef;
   // Permite a utilização de forms no arquivo "eventos.component.html"
   registerForm: FormGroup;
 
@@ -76,11 +80,15 @@ export class EventosComponent implements OnInit {
     this.eventosFiltrados = this.filtroLista ? this.filtrarEventos(this.filtroLista) : this.eventos;
   }
 
-  openModal(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template);
+  // Primeira versao de como exibir um modal!!
+  // openModal(template: TemplateRef<any>) {
+  //   this.modalRef = this.modalService.show(template);
+  // }
+
+  openModal(template: any) {
+    this.registerForm.reset();
+    template.show();
   }
-
-
 
   ngOnInit() {
 
@@ -148,7 +156,20 @@ export class EventosComponent implements OnInit {
 
 
 
-  salvarAlteracao() {
+  salvarAlteracao(template: any) {
+    if (this.registerForm.valid) {
+      // Pega todos os valor (similar ao json e passar para a variavel evento.)
+      this.evento = Object.assign({}, this.registerForm.value);
+      this.eventoService.postEvento(this.evento).subscribe(
+        (novoEvento: Evento) => {
+          console.log(novoEvento);
+          template.hide();
+          this.getEventos();
+        }, error => {
+          console.log(error);
+        }
+      );
+    }
   }
 
 

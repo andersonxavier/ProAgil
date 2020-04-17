@@ -1,17 +1,32 @@
+<!-- Flex Box bootstrap -->
+<!-- Para testar o antigo modal:
+* Iten div d-flex deve ser removido
+* Remover atributo mr-auto da div com action="form-inline mr-auto" 
+  Que ser para ocupar o lado direto todo
+* Remover outra Divs indicadas.
+-->
 
-<div action="form-inline">
-  <!-- Conhecido como "Two-way Data Binding" o
-       [(ngModel)] nao funciona dentro de form comum! 
-       Para que ele funcione foi necessario importar o
-       FormsModule dentro do arquivo "app.module.ts"      
-  -->
-  <!--filtro lista adicionado em "eventos.component.ts"  -->
-  <div class="form-group mb-2">
-    <label class="mr-2">Filtro:</label> <input type="text" 
-    class="form-control mr-2" 
-    placeholder="buscar"
-    [(ngModel)]="filtroLista">
-    <!-- <button class="btn btn-outline-success">buscar</button>  -->
+<div class="d-flex"> <!-- Para testar o antigo modal esse item deve ser removido! -->
+  <div action="form-inline mr-auto"> 
+    <!-- Conhecido como "Two-way Data Binding" o
+        [(ngModel)] nao funciona dentro de form comum! 
+        Para que ele funcione foi necessario importar o
+        FormsModule dentro do arquivo "app.module.ts"      
+    -->
+    <!--filtro lista adicionado em "eventos.component.ts"  -->
+    <div class="form-group mb-2">
+      <label class="mr-2">Filtro:</label> <input type="text" 
+      class="form-control mr-2" 
+      placeholder="buscar"
+      [(ngModel)]="filtroLista">
+      <!-- <button class="btn btn-outline-success">buscar</button>  -->
+    </div>
+  </div>
+  <div>
+    <button class="btn btn-outline-primary" (click)="openModal(template)">
+      <i class="fa fa-plus-circle"></i>&nbsp;
+      Novo Evento
+    </button>
   </div>
 </div>
 <!-- Toda vez q se cria uma variavel dentro de uma imterpolacao
@@ -100,151 +115,186 @@ como no caso a baixo, é possivel usar no [(ngModel)]
   
 </table>
 
-<!-- Modal  -->
-<ng-template #template>
+<!-- Modal novo -->
+<div bsModal #template="bs-modal" class="modal fade" tabindex="-1"
+    role="dialog" aria-labelledby="dialog-sizes-name1">
+    <div class="modal-dialo modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 id="dialog-sizes-name1" class="modal-title pull-left">Large modal</h4>
+          <button type="button" class="close pull-right" (click)="template.hide()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          
+          <!-- FORMS (react form) -->
+          <!-- Nao esquece de referenciar o impot "ReactiveFormsModule" -->
+          <!-- No arquivo "app.module.ts" -->
+          <form [formGroup]="registerForm">
+            <div class="form-row">
+              <div class="form-group col-md-12">
+                <label>Tema</label>
+
+                <!-- ngClass neste caso colocar o atributo csss "is-invalid" caso
+                a expressao satisfaca -->
+                <!-- [ngClass]="{cssClass: expression}" -->
+                <input type="text" class="form-control" 
+                [ngClass]="{'is-invalid': registerForm.get('tema').errors && registerForm.get('tema').touched}"
+                formControlName="tema" placeholder="Insira o Tema">
+                <div *ngIf="registerForm.get('tema').hasError('required') 
+                && registerForm.get('tema').touched" class="invalid-feedback">
+                  Tema é obrigatório
+                </div>
+                <div *ngIf="registerForm.get('tema').hasError('minlength')
+                && registerForm.get('tema').touched" class="invalid-feedback">
+                  Tema deve ter no mínimo 4 Caracteres.
+                </div>
+                <div *ngIf="registerForm.get('tema').hasError('maxlength')
+                && registerForm.get('tema').touched" class="invalid-feedback">
+                  Tema deve ter no máximo 50 Caracteres.
+                </div>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-8">
+                <label>Local</label>
+                <input type="text" class="form-control"
+                [ngClass]="{'is-invalid': registerForm.get('local').errors
+                  && registerForm.get('local').touched}"
+                formControlName="local" placeholder="">
+                <div *ngIf="registerForm.get('local').hasError('required') 
+                && registerForm.get('local').touched"
+                class="invalid-feedback">
+                  Local é obrigatório
+                </div>
+              </div>
+              <div class="form-group col-md-4">
+                <label>Data e Hora</label>
+
+
+                <!-- Importar o css em "styless.css" -->
+                <!-- (input type="date") nao usar Date !! O componete do bsDatepicker usar text  -->
+                <input type="text" class="form-control" 
+                bsDatepicker
+                [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY hh:mm a' }"
+                [ngClass]="{'is-invalid': registerForm.get('dataEvento').errors
+                  && registerForm.get('dataEvento').touched}"
+                formControlName="dataEvento" placeholder="">
+                <div *ngIf="registerForm.get('dataEvento').hasError('required') 
+                  && registerForm.get('dataEvento').touched"
+                class="invalid-feedback">
+                  Data e Hora tema é obrigatório
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-3">
+                <label>Qtd Pessoas</label>
+                <input type="text" 
+                [ngClass]="{'is-invalid': registerForm.get('qtdPessoas').errors
+                  && registerForm.get('qtdPessoas').touched}"
+                class="form-control is-invalid" formControlName="qtdPessoas" placeholder="">
+                <div *ngIf="registerForm.get('qtdPessoas').hasError('required') 
+                && registerForm.get('qtdPessoas').touched"
+                class="invalid-feedback">
+                  Qtd Pessoas é obrigatório
+                </div>
+                <div *ngIf="registerForm.get('qtdPessoas').hasError('max') 
+                && registerForm.get('qtdPessoas').touched"
+                class="invalid-feedback">
+                  Qtd Pessoas deve ser menor que 120000.
+                </div>
+              </div>
+              <div class="form-group col-md-9">
+                <label>Imagem</label>
+                <input type="text"  [ngClass]="{'is-invalid': registerForm.get('imagemURL').errors
+                && registerForm.get('imagemURL').touched}"
+                class="form-control is-invalid" formControlName="imagemURL" placeholder="">
+                <div *ngIf="registerForm.get('imagemURL').hasError('required') 
+                && registerForm.get('imagemURL').touched"
+                class="invalid-feedback">
+                  Imagem é obrigatório
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-4">
+                <label>Telefone</label>
+                <input type="text" class="form-control" 
+                [ngClass]="{'is-invalid': registerForm.get('telefone').errors
+                && registerForm.get('telefone').touched}"
+                formControlName="telefone" placeholder="">
+                <div *ngIf="registerForm.get('telefone').hasError('required') 
+                && registerForm.get('telefone').touched"
+                class="invalid-feedback">
+                  Telefone é obrigatório
+                </div>
+              </div>
+              <div class="form-group col-md-8">
+                <label>Email</label>
+                <input type="text" class="form-control" 
+                [ngClass]="{'is-invalid': registerForm.get('email').errors
+                && registerForm.get('email').touched}"
+                formControlName="email" placeholder="">
+                <div *ngIf="registerForm.get('email').hasError('required') 
+                && registerForm.get('email').touched"
+                class="invalid-feedback">
+                  Email é obrigatório.
+                </div>
+                <div *ngIf="registerForm.get('email').hasError('email') 
+                && registerForm.get('email').touched"
+                class="invalid-feedback">
+                  Deve ser um e-mail válido.
+                </div>
+              </div>
+            </div>
+          </form>
+
+
+
+
+      </div>
+      <div class="modal-footer d-flex">
+        
+        <button class="btn btn-secondary" (click)="template.hide()">
+          fechar
+        </button>
+        <button class="btn btn-secondary ml-auto" [disabled]="!registerForm.valid" (click)="salvarAlteracao(template)">
+          Salvar Alterações
+        </button>
+
+      </div>
+      </div>
+
+    </div>
+
+
+</div>
+
+<!-- Modal Antigo -->
+<!-- dependente do antigo metodo de exibicao de modal "openModal" em "eventos.component.ts" -->
+<!--modaralRef ==> criado em eventos.component.ts-->
+<!-- 
+  <ng-template #template>
   <div class="modal-header">
     <h4 class="modal-title pull-left">Modal</h4>
      <button type="button"	class="close pull-right"
-      aria-label="Close" (click)="modalRef.hide()"> <!--modaralRef criado em eventos.component.ts-->
+      aria-label="Close" (click)="modalRef.hide()"> 
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
   <div class="modal-body">
     This is a modal.
   </div>
-</ng-template>
-
-<!-- FORMS (react form) -->
-<!-- Nao esquece de referenciar o impot "ReactiveFormsModule" -->
-<!-- No arquivo "app.module.ts" -->
-<form [formGroup]="registerForm">
-  <div class="form-row">
-    <div class="form-group col-md-12">
-      <label>Tema</label>
-
-      <!-- ngClass neste caso colocar o atributo csss "is-invalid" caso
-      a expressao satisfaca -->
-      <!-- [ngClass]="{cssClass: expression}" -->
-      <input type="text" class="form-control" 
-      [ngClass]="{'is-invalid': registerForm.get('tema').errors && registerForm.get('tema').touched}"
-       formControlName="tema" placeholder="Insira o Tema">
-      <div *ngIf="registerForm.get('tema').hasError('required') 
-      && registerForm.get('tema').touched" class="invalid-feedback">
-        Tema é obrigatório
-      </div>
-      <div *ngIf="registerForm.get('tema').hasError('minlength')
-      && registerForm.get('tema').touched" class="invalid-feedback">
-        Tema deve ter no mínimo 4 Caracteres.
-      </div>
-      <div *ngIf="registerForm.get('tema').hasError('maxlength')
-      && registerForm.get('tema').touched" class="invalid-feedback">
-        Tema deve ter no máximo 50 Caracteres.
-      </div>
-    </div>
-  </div>
-  <div class="form-row">
-    <div class="form-group col-md-8">
-      <label>Local</label>
-      <input type="text" class="form-control"
-      [ngClass]="{'is-invalid': registerForm.get('local').errors
-        && registerForm.get('local').touched}"
-      formControlName="local" placeholder="">
-      <div *ngIf="registerForm.get('local').hasError('required') 
-      && registerForm.get('local').touched"
-      class="invalid-feedback">
-        Local é obrigatório
-      </div>
-    </div>
-    <div class="form-group col-md-4">
-      <label>Data e Hora</label>
+</ng-template> 
+-->
 
 
-      <!-- Importar o css em "styless.css" -->
-      <!-- (input type="date") nao usar Date !! O componete do bsDatepicker usar  -->
-      <input type="text" class="form-control" 
-      bsDatepicker
-      [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY hh:mm a' }"
-      [ngClass]="{'is-invalid': registerForm.get('dataEvento').errors
-        && registerForm.get('dataEvento').touched}"
-      formControlName="dataEvento" placeholder="">
-      <div *ngIf="registerForm.get('dataEvento').hasError('required') 
-        && registerForm.get('dataEvento').touched"
-      class="invalid-feedback">
-        Data e Hora tema é obrigatório
-      </div>
-    </div>
-  </div>
-
-  <div class="form-row">
-    <div class="form-group col-md-3">
-      <label>Qtd Pessoas</label>
-      <input type="text" 
-      [ngClass]="{'is-invalid': registerForm.get('qtdPessoas').errors
-        && registerForm.get('qtdPessoas').touched}"
-      class="form-control is-invalid" formControlName="qtdPessoas" placeholder="">
-      <div *ngIf="registerForm.get('qtdPessoas').hasError('required') 
-      && registerForm.get('qtdPessoas').touched"
-      class="invalid-feedback">
-        Qtd Pessoas é obrigatório
-      </div>
-      <div *ngIf="registerForm.get('qtdPessoas').hasError('max') 
-      && registerForm.get('qtdPessoas').touched"
-      class="invalid-feedback">
-        Qtd Pessoas deve ser menor que 120000.
-      </div>
-    </div>
-    <div class="form-group col-md-9">
-      <label>Imagem</label>
-      <input type="text"  [ngClass]="{'is-invalid': registerForm.get('imagemURL').errors
-      && registerForm.get('imagemURL').touched}"
-      class="form-control is-invalid" formControlName="imagemURL" placeholder="">
-      <div *ngIf="registerForm.get('imagemURL').hasError('required') 
-      && registerForm.get('imagemURL').touched"
-      class="invalid-feedback">
-        Imagem é obrigatório
-      </div>
-    </div>
-  </div>
-
-  <div class="form-row">
-    <div class="form-group col-md-4">
-      <label>Telefone</label>
-      <input type="text" class="form-control" 
-      [ngClass]="{'is-invalid': registerForm.get('telefone').errors
-      && registerForm.get('telefone').touched}"
-      formControlName="telefone" placeholder="">
-      <div *ngIf="registerForm.get('telefone').hasError('required') 
-      && registerForm.get('telefone').touched"
-      class="invalid-feedback">
-        Telefone é obrigatório
-      </div>
-    </div>
-    <div class="form-group col-md-8">
-      <label>Email</label>
-      <input type="text" class="form-control" 
-      [ngClass]="{'is-invalid': registerForm.get('email').errors
-      && registerForm.get('email').touched}"
-      formControlName="email" placeholder="">
-      <div *ngIf="registerForm.get('email').hasError('required') 
-      && registerForm.get('email').touched"
-      class="invalid-feedback">
-        Email é obrigatório.
-      </div>
-      <div *ngIf="registerForm.get('email').hasError('email') 
-      && registerForm.get('email').touched"
-      class="invalid-feedback">
-        Deve ser um e-mail válido.
-      </div>
-    </div>
-  </div>
-</form>
 <br>
-<button class="btn btn-secondary" (click)="openModal(template)">
-  fechar
-</button>
-<button class="btn btn-secondary" [disabled]="!registerForm.valid" (click)="salvarAlteracao()">
-  Salvar Alterações
-</button>
+
 <br>
 <br>
 <!-- Usado para testar o formulario! -->
