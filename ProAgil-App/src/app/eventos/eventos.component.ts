@@ -31,7 +31,9 @@ export class EventosComponent implements OnInit {
   eventosFiltrados: Evento[]; // eventosFiltrados: any = [];
   eventos: Evento[]; // eventos: any;
 
+ 
   evento: Evento;
+  modoSalvar = 'post';
 
   imagemLargura = 50;
   imagemMargem = 2;
@@ -39,6 +41,7 @@ export class EventosComponent implements OnInit {
   // modalRef: BsModalRef;
   // Permite a utilização de forms no arquivo "eventos.component.html"
   registerForm: FormGroup;
+  bodyDeletarEvento = '';
 
   // tslint:disable-next-line: variable-name
   _filtroLista: string;
@@ -73,11 +76,44 @@ export class EventosComponent implements OnInit {
     }
 
   get filtroLista(): string {
+    // console.log('Entro no filtroLista --> ');
+    // console.log(this._filtroLista);
     return this._filtroLista;
   }
   set filtroLista(value: string) {
-    this._filtroLista = value;
+    // console.log('Entro no filtroLista com parametro string');
+    // this._filtroLista = value;
     this.eventosFiltrados = this.filtroLista ? this.filtrarEventos(this.filtroLista) : this.eventos;
+  }
+
+  editarEvento(evento: Evento, template: any) {
+    this.modoSalvar = 'put';
+    this.openModal(template);
+    this.evento = evento;
+    this.registerForm.patchValue(evento);
+  }
+
+  novoEnvento(template: any) {
+    this.modoSalvar = 'post';
+    this.openModal(template);
+  }
+
+  excluirEvento(evento: Evento, template: any) {
+    this.openModal(template); // ou // template.show();
+    this.evento = evento;
+    this.bodyDeletarEvento = `Tem certeza que deseja excluir o Evento: ${evento.tema}, Código: ${evento.tema}`;
+  }
+
+  confirmeDelete(template: any) {
+    console.log('deletando');
+    this.eventoService.deleteEvento(this.evento.id).subscribe(
+      () => {
+          template.hide();
+          this.getEventos();
+        }, error => {
+          console.log(error);
+        }
+    );
   }
 
   // Primeira versao de como exibir um modal!!
@@ -158,17 +194,32 @@ export class EventosComponent implements OnInit {
 
   salvarAlteracao(template: any) {
     if (this.registerForm.valid) {
-      // Pega todos os valor (similar ao json e passar para a variavel evento.)
-      this.evento = Object.assign({}, this.registerForm.value);
-      this.eventoService.postEvento(this.evento).subscribe(
-        (novoEvento: Evento) => {
-          console.log(novoEvento);
-          template.hide();
-          this.getEventos();
-        }, error => {
-          console.log(error);
-        }
-      );
+      if (this.modoSalvar === 'post') {
+        // Pega todos os valor (similar ao json e passar para a variavel evento.)
+        this.evento = Object.assign({}, this.registerForm.value);
+        // console.log(this.evento);
+        this.eventoService.postEvento(this.evento).subscribe(
+          (novoEvento: Evento) => {
+            console.log('Entrou no metodo salvarAlteracao -> ');
+            console.log(novoEvento);
+            template.hide();
+            this.getEventos();
+          }, error => {
+            console.log(error);
+          }
+        );
+      } else {
+        this.evento = Object.assign({}, this.registerForm.value);
+        // console.log(this.evento);
+        this.eventoService.putEvento(this.evento).subscribe(
+          () => {
+            template.hide();
+            this.getEventos();
+          }, error => {
+            console.log(error);
+          }
+        );
+      }
     }
   }
 
@@ -179,6 +230,7 @@ export class EventosComponent implements OnInit {
       (_eventos: Evento[]) => {
       this.eventos  = _eventos;
       this.eventosFiltrados = this.eventos;
+      console.log('Entrou no metodo getEventos -> ');
       console.log(_eventos);
     // tslint:disable-next-line: no-shadowed-variable
     }, error => {
