@@ -1,0 +1,38 @@
+# https://stackoverflow.com/questions/56150932/docker-file-skipping-project-because-it-was-not-found
+
+FROM mcr.microsoft.com/dotnet/core/aspnet:2.2 AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+# Determina a versao do .netCore
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2 AS build
+WORKDIR /src
+
+# COPY ["ProAgil/ProAgil.Domain/ProAgil.Domain.csproj", "ProAgil/ProAgil.Domain/"]
+# COPY ["ProAgil/ProAgil.Repository/ProAgil.Repository.csproj", "ProAgil/ProAgil.Repository/"]
+# COPY ["ProAgil/ProAgil.WebAPI/ProAgil.WebAPI.csproj", "ProAgil/ProAgil.WebAPI/"]
+COPY ["ProAgil.Domain/ProAgil.Domain.csproj", "ProAgil.Domain/"]
+COPY ["ProAgil.Repository/ProAgil.Repository.csproj", "ProAgil.Repository/"]
+COPY ["ProAgil.WebAPI/ProAgil.WebAPI.csproj", "ProAgil.WebAPI/"]
+RUN dotnet restore "ProAgil.WebAPI/ProAgil.WebAPI.csproj"
+COPY . .
+# WORKDIR "/src/ProAgil/ProAgil.WebAPI"
+WORKDIR "/src/ProAgil.WebAPI"
+RUN dotnet build "ProAgil.WebAPI.csproj" -c Release -o /app/build
+
+# Usado pelo entity Framework e Migration
+COPY ["ProAgil.WebAPI/appsettings.json", "ProAgil.WebAPI/"]
+
+# Copiando banco para dentro do docker
+# COPY ["ProAgil/ProAgil.WebAPI/ProAgil.db", "ProAgil.WebAPI/"]
+# https://stackoverflow.com/questions/54968469/docker-dotnet-ef-database-update-fails
+COPY ["ProAgil.WebAPI/ProAgil.db", "ProAgil.WebAPI/"]
+
+FROM build AS publish
+RUN dotnet publish "ProAgil.WebAPI.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "ProAgil.WebAPI.dll"]

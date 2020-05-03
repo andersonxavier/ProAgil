@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -37,6 +38,8 @@ namespace ProAgil.WebAPI
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+            //Indica para a aplicacao que ela trabalhara com AutoMapper
+            services.AddAutoMapper();
 
             //Colocado devido ao erro (Esse erro deu no projeto que tentou consumir ele, dando erro no acesso):
             /*Access to XMLHttpRequest at 'http://localhost:5000/api/values' from origin 'http://localhost:4200' 

@@ -12,7 +12,7 @@ namespace ProAgil.Repository
         public ProAgilRepository(ProAgilContext context)
         {
             _context = context;
-            _context = context;
+
             // Forma Geral de impedir o Bloqueio (equivalente nolock) no banco.
             // Entretando esse comando delisga a "Rastreabilidade" do banco.
             // Outra forma é usando "AsNoTracking" em cada Web Metodo.
@@ -60,7 +60,7 @@ namespace ProAgil.Repository
 
             query = query
             .AsNoTracking() // Usado para nao Travar (Bloquear o banco)
-            .OrderByDescending(c =>c.DataEvento);
+            .OrderBy(c =>c.Id); //.OrderByDescending(c =>c.DataEvento);
 
             return await query.ToArrayAsync();
         }
@@ -101,7 +101,7 @@ namespace ProAgil.Repository
 
             query = query
             .AsNoTracking() // Usado para nao Travar (Bloquear o banco)
-            .OrderByDescending(c => c.DataEvento)
+            .OrderBy(c => c.Id) //.OrderByDescending(c => c.DataEvento)
             .Where(c => c.Id == EventoId);
 
             return await query.FirstOrDefaultAsync();
